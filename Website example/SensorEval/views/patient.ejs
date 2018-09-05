@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('partials/header') %>
+  </head>
+  <body>
+     <%- include('partials/navbar') %> 
+
+    <div class="container">
+      <div class = "row">
+        <button type="button" class="btn btn-default" onclick="goBack()">Go Back</button>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h3 class="text-center"> <%= patientInfo[0].Name %></h3>
+          <p class="text-center"> Patient ID: <%= patientInfo[0].PatientID %></p>
+          <p class="text-center"> Date registered: <%= patientInfo[0].DateRegistered%></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div id="container" style="width:100% important!; height:400px important!;"></div>
+          <div id="container2" style="width:100% important!; height:400px important!;"></div>
+          <div id="container3" style="width:100% important!; height:400px important!;"></div>
+        </div>
+        <div class="col-sm-6">
+          <h4 class="text-center">All Sessions</h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <% allUploads.forEach(function(patient) { %>
+                <tr>
+                  <td><a href="/session/?SessionID=<%= patient.SessionID %>"><%= patient.DateTimeUploaded %></a></td>
+                </tr>
+              <% }); %>
+            </table>
+          </div> 
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+
+// ************ chart 1
+
+      var numberUploads = JSON.parse(<%- JSON.stringify(numberUploads) %>);
+      var months = JSON.parse(<%- JSON.stringify(months) %>);
+
+      var chart = new Highcharts.Chart({
+        chart: {
+            type: 'column',
+            renderTo: 'container'
+        },
+        title: {
+            text: 'Uploads in the past year'
+        },
+        xAxis: {
+            categories: months
+        },
+        yAxis: {
+            title: {
+                text: 'Number of uploads'
+            }
+        },
+        series: numberUploads
+      });
+
+// ************** chart 2
+// number of uploads per day
+      var dayUploads = JSON.parse(<%- JSON.stringify(dayUploads) %>);
+      var days = JSON.parse(<%- JSON.stringify(days) %>);
+
+      var chart2 = new Highcharts.Chart({
+        chart: {
+            type: 'column',
+            renderTo: 'container2'
+        },
+        title: {
+            text: 'Uploads in the past month'
+        },
+        xAxis: {
+            categories: days
+        },
+        yAxis: {
+            title: {
+                text: 'Number of uploads'
+            }
+        },
+        series: dayUploads
+      });
+
+//********* chart 3
+      var alldates = JSON.parse(<%- JSON.stringify(alldates) %>);
+      var activity = JSON.parse(<%- JSON.stringify(activity) %>);
+
+      var chart3 = new Highcharts.Chart({
+        chart: {
+            type: 'column',
+            renderTo: 'container3'
+        },
+        title: {
+            text: 'Activity per day'
+        },
+
+        xAxis: {
+            categories: alldates
+        },
+
+        yAxis: {
+            allowDecimals: false,
+            min: 0,
+            title: {
+                text: 'Time in minutes'
+            }
+        },
+
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.x + '</b><br/>' +
+                    this.series.name + ': ' + this.y + '<br/>' +
+                    'Total: ' + this.point.stackTotal;
+            }
+        },
+
+        plotOptions: {
+            column: {
+                stacking: 'normal'
+            }
+        },
+
+        series: activity
+    });
+
+    function goBack() {
+        window.history.back();
+    }
+
+</script> 
+
+    </script>
+
+  </body>
+ </html>

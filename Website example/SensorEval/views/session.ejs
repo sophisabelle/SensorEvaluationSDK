@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('partials/header') %>
+  </head>
+  <body>
+     <%- include('partials/navbar') %> 
+
+    <div class="container">
+      <div class="row">
+        <button type="button" class="btn btn-default" onclick="goBack()">Go Back</button>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h3 class="text-center"> <%= sessionPatientInfo[0].Name %></h3>
+          <p class="text-center"> Session ID: <%= sessionPatientInfo[0].SessionID %></p>
+          <p class="text-center"> Session Start: <%= sessionPatientInfo[0].StartTime%></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div id="container" style="width:100% important!; height:400px important!;"></div>
+        </div>
+        <div class="col-sm-6">
+          <div id="container2" style="width:100% important!; height:400px important!;"></div>
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+
+      var sessionOverview = JSON.parse(<%- JSON.stringify(sessionOverview) %>);
+
+      var chart = new Highcharts.Chart({
+      chart: {
+        type: 'pie',
+        renderTo: 'container',
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false
+      },
+      title: {
+          text: 'Activity'
+      },
+      tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      plotOptions: {
+          pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                  enabled: true,
+                  format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                  style: {
+                      color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                  }
+              }
+          }
+      },
+      series: [{
+          name: 'Brands',
+          colorByPoint: true,
+          data: sessionOverview
+      }]
+  });
+
+
+      var values = JSON.parse(<%- JSON.stringify(values) %>);
+      var startDate = JSON.parse(<%- JSON.stringify(startDate) %>);
+      var dat = new Date(startDate);
+      var datestr = dat.toString().slice(0,15);
+
+
+  //****chart 2 ****
+    Highcharts.chart('container2', {
+
+    title: {
+        text: 'Session activity (analysed per time interval of 10 measurements - 875 ms)'
+    },
+    xAxis: {
+      title: {
+        text: datestr
+      },
+      type: 'datetime'
+    },
+    yAxis: {
+        title: {
+            text: 'Analysed activity'
+        },
+        categories: ['Inactive: Lying Down','Inactive: Sitting', 'Inactive: Standing','Active: Limping','Active: Walking','Active: Running']
+    },
+
+    plotOptions: {
+        series: {
+            pointStart: dat.getTime(),
+            pointInterval: 875
+        }
+    },
+
+    series: [{
+        name: 'Activities',
+        data: values
+    }],
+
+
+});
+
+    function goBack() {
+        window.history.back();
+    }
+
+    </script>
+
+  </body>
+ </html>

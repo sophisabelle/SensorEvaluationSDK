@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:sensorsgit" x:Class="sensorsgit.MainPage" x:Name="myPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:NotBoolConverter x:Key="notBool" />
+            <local:ColourConverter x:Key="toCol" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout>
+
+        
+        <StackLayout x:Name="welcomePage" Padding="0, 20, 0, 20">
+            <Grid x:Name="welcomeLabels" Padding="20, 0, 20, 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                    <Label x:Name="welcomeLabel" Text="Welcome to Sensor Evaluation! Please make sure your bluetooth is turned on when trying to connect to a sensor" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" VerticalOptions="Center" />
+                    <Button x:Name="scanButton" Text="Scan For Sensors" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Clicked="StartScanClicked" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+                    <Button x:Name="stopScanButton" Text="Stop Scanning" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Clicked="StopScanClicked" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" IsVisible="false" />
+            </Grid>
+            <Grid>
+                <ListView x:Name="SensorView" RowHeight="100" ItemTapped="OnTap" VerticalOptions="Center">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell Height="100">
+                                    <StackLayout
+                                    Orientation="Vertical" Padding="10,20,10,20" VerticalOptions="Center">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="{Binding Name}" VerticalOptions="CenterAndExpand"
+                                            TextColor="#503026" />
+                                            <Label Text="{Binding BatteryCharge}" 
+                                            TextColor="#503026" />
+                                            <Label WidthRequest="130" TextColor="{Binding Connected, Converter={StaticResource toCol} }" Text="Connected" IsVisible="{Binding Connected}" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand"/>
+                                            <Label WidthRequest="130" TextColor="{Binding Connected, Converter={StaticResource toCol} }" Text="Not Connected" IsVisible="{Binding Connected, Converter={StaticResource notBool} }" VerticalOptions="CenterAndExpand" HorizontalOptions="EndAndExpand" />
+                                        </StackLayout>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Footer>
+                            <Label />
+                        </ListView.Footer>
+                    </ListView>
+                <Button x:Name="setUpSessionButton" Text="Set Up Session" Clicked="SetUpSessionClicked" HorizontalOptions="Center" VerticalOptions="EndAndExpand" IsVisible="false" />
+            </Grid>
+        </StackLayout>
+
+        <StackLayout x:Name="sessionSetUpPage" IsVisible="false" Padding="0, 20, 0, 20">
+            <Grid x:Name="setUpLabels" Padding="20, 0, 20, 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                    <Label x:Name="setUpLabel" Text="Please select a location for each connected sensor and start session when you are ready to record" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" VerticalOptions="Center" />
+                     <Button x:Name="cancelButton" Text="Cancel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Clicked="CancelClicked" HorizontalOptions="Center" VerticalOptions="Center"/>
+                     <Entry x:Name="patientIdentification" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" VerticalOptions="Center" Placeholder="Please enter your patient Id"></Entry>
+            </Grid>
+            <Grid>
+                <ListView x:Name="SessionSetUpView" RowHeight="100" VerticalOptions="Center">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell Height="100">
+                                <StackLayout Orientation="Vertical" Padding="10,20,10,20" VerticalOptions="Center">
+                                    <StackLayout Orientation="Vertical" >
+                                        <Label Text="{Binding Name}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand"
+                                        TextColor="#503026" />
+                                        <Picker Title="{Binding Name}" SelectedIndexChanged="OnPickerSelectedIndexChanged" HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
+                                        <Picker.Items>
+                                        <x:String>Stomach</x:String>
+                                        <x:String>Back</x:String>
+                                        <x:String>Chest</x:String>
+                                        <x:String>Left Upper Arm</x:String>
+                                        <x:String>Left Lower Arm</x:String>
+                                        <x:String>Right Upper Arm</x:String>
+                                        <x:String>Right Lower Arm</x:String>
+                                        <x:String>Left Upper Leg</x:String>
+                                        <x:String>Left Lower Leg</x:String>
+                                        <x:String>Right Upper Leg</x:String>
+                                        <x:String>Right Lower Leg</x:String>
+                                        </Picker.Items>
+                                        </Picker>
+                                    </StackLayout>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.Footer>
+                    <Label />
+                    </ListView.Footer>
+                </ListView>
+            </Grid>
+            <Button x:Name="sessionButton" Text="Start Session" Clicked="StartSessionClicked" HorizontalOptions="Center" VerticalOptions="End"/>
+
+
+        </StackLayout>
+
+        <StackLayout x:Name="sessionPage" IsVisible="false" Margin="15" Padding="0, 20, 0, 20">
+                    
+        <Grid>
+            <Grid x:Name="sessionLabels" Padding="20, 0, 20, 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                    <Label x:Name="sessionLabel" Text="Recording Session" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+                    <Label x:Name="recordedLabel" Text="Finished Recording" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" IsVisible="false"/>
+                    <Label x:Name="patientLabel" Text="" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+                    <Label x:Name="sessionInfoLabel" Text="" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+                </Grid>
+             </Grid>
+            <Grid Padding="0, 20, 0, 0">
+            <ListView x:Name="SessionView" RowHeight="100" ItemTapped="OnTap">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell Height="100">
+                                <StackLayout
+                                Orientation="Vertical" Padding="10,20,10,20" VerticalOptions="CenterAndExpand">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding Name}" VerticalOptions="CenterAndExpand"
+                                        TextColor="#503026" />
+                                        <Label Text="{Binding PositionDescription}" VerticalOptions="CenterAndExpand"
+                                        TextColor="#503026" />
+                                    </StackLayout>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.Footer>
+                        <Label />
+                    </ListView.Footer>
+                </ListView>
+            </Grid>
+            <Button x:Name="stopRecording" Text="Stop Recording" Clicked="StopRecordingClicked" HorizontalOptions="Center" VerticalOptions="End" IsVisible="true" />
+            <Button x:Name="uploadSession" Text="Upload Session" Clicked="UploadSessionClicked" HorizontalOptions="Center" VerticalOptions="End" IsVisible="false" />
+             <Button x:Name="discardSession" Text="Discard Session" Clicked="DiscardSessionClicked" HorizontalOptions="Center" VerticalOptions="End" IsVisible="false" />
+    
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

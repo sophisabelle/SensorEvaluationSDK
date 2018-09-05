@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('partials/header') %>
+  </head>
+  <body>
+    <%- include('partials/navbar') %>
+
+    <div class="container">
+      <div class="col-sm-12">
+          <h3 class="text-center">Stats</h3>
+        </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div id="container"></div>
+        </div>
+        <div class="col-sm-6">
+          <div id="container2"></div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+
+      var numberUploads = JSON.parse(<%- JSON.stringify(numberUploads) %>);
+      var months = JSON.parse(<%- JSON.stringify(months) %>);
+
+      var chart = new Highcharts.Chart({
+        chart: {
+            type: 'column',
+            renderTo: 'container'
+        },
+        title: {
+            text: 'Uploads in the past year'
+        },
+        xAxis: {
+            categories: months
+        },
+        yAxis: {
+            title: {
+                text: 'Number of uploads'
+            }
+        },
+        series: numberUploads
+      });
+
+// chart 2 ************
+      var dayUploads = JSON.parse(<%- JSON.stringify(dayUploads) %>);
+      var days = JSON.parse(<%- JSON.stringify(days) %>);
+
+      var chart2 = new Highcharts.Chart({
+        chart: {
+            type: 'column',
+            renderTo: 'container2'
+        },
+        title: {
+            text: 'Uploads in the past month'
+        },
+        xAxis: {
+            categories: days
+        },
+        yAxis: {
+            title: {
+                text: 'Number of uploads'
+            }
+        },
+        series: dayUploads
+      });
+
+
+    </script>
+  </body>
+  
+</html>
