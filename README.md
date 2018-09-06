@@ -18,4 +18,4 @@ The app uses the following plugins:
 
 For replication:
 The azure function trigger needs to be set to blob uploads to a storage account in the settings.
-Additionally an IoT hub needs to be considered, and connection strings need to be set up in the app.
+Additionally an IoT hub needs to be configured, and connection strings need to be set up in the app.
