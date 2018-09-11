@@ -22,7 +22,6 @@ Additionally an IoT hub needs to be configured, and connection strings need to b
 
 Links to Azure Machine Learning Studio Experiments:
 
-Training and comparing different models: https://gallery.cortanaintelligence.com/Experiment/training-model
-
-Movement classification of incoming data using a trained model:  https://gallery.cortanaintelligence.com/Experiment/sensor-evaluation-analysis
+- Training and comparing different models: https://gallery.cortanaintelligence.com/Experiment/training-model
+- Movement classification of incoming data using a trained model:  https://gallery.cortanaintelligence.com/Experiment/sensor-evaluation-analysis
 
