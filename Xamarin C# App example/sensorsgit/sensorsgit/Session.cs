@@ -14,7 +14,6 @@ namespace sensorsgit
         public int numberOfRecords = 0;
         public string patientId;
         private string pathname;
-        private StreamWriter file;
         public ObservableCollection<Sensor> connectedSensorsList;
 
 
@@ -42,12 +41,13 @@ namespace sensorsgit
 
             // set path
             pathname = Path.Combine(documents, this.id + ".tmp");
-            file = File.CreateText(pathname);
 
-            // write header
-            string header = "sessionID,patientID,startTime,numberOfSensors,sensorName,sensorPosition,timeStamp,accX,accY,accZ,gyroX,gyroY,gyroZ,magX,magY,magZ";
-            file.WriteLine(header);
-            Console.WriteLine(header);
+            using (StreamWriter writer = new StreamWriter(pathname, true))
+            {
+                //write header
+                string header = "sessionID,patientID,startTime,numberOfSensors,sensorName,sensorPosition,timeStamp,accX,accY,accZ,gyroX,gyroY,gyroZ,magX,magY,magZ";
+                writer.WriteLine(header);
+            }
 
             // set startTime
             this.startTime = DateTime.Now;
@@ -75,12 +75,15 @@ namespace sensorsgit
         }
 
         public void WriteToFile(Sensor sensor, SensorData data) {
-
-            string write = this.id + "," + patientId + "," + this.startTime.Ticks + "," + this.numberOfSensors + "," + sensor.Name + "," + sensor.SensorPosition.ToString() + "," + data.timeStamp.ToString() + "," + data.accX + "," + data.accY + "," + data.accZ + "," + data.gyroX + "," + data.gyroY + "," + data.gyroZ + "," + data.magX + "," + data.magY + "," + data.magZ;
-
-            file.WriteLine(write);
-            file.Flush();
-            Console.WriteLine(write);
+        
+            using (StreamWriter writer = new StreamWriter(pathname, true))
+            {
+                //write header
+                string write = this.id + "," + patientId + "," + this.startTime.Ticks + "," + this.numberOfSensors + "," + sensor.Name + "," + sensor.SensorPosition.ToString() + "," + data.timeStamp.ToString() + "," + data.accX + "," + data.accY + "," + data.accZ + "," + data.gyroX + "," + data.gyroY + "," + data.gyroZ + "," + data.magX + "," + data.magY + "," + data.magZ;
+                writer.WriteLine(write);
+                long length = new System.IO.FileInfo(pathname).Length;
+                Console.WriteLine(length);
+            }
 
         }
 
@@ -89,21 +92,27 @@ namespace sensorsgit
         }
 
         public async Task<bool> UploadSession(CloudUpload cloudUpload) {
-            cloudUpload.SendToBlobAsync(pathname, file, this.id);
+
+            using (StreamWriter writer = new StreamWriter(pathname, true))
+            {
+                cloudUpload.SendToBlobAsync(pathname, writer, this.id);
+            }
 
             Console.WriteLine("Receive file upload notifications\n");
             await cloudUpload.ReceiveFileUploadNotificationAsync();
             return true;
         }
 
-        public async Task<bool> DisconnectAll()
+        public async void DisconnectAll()
         {
-            //Disconnect devices
-            foreach (var item in this.ConnectedSensorsList)
+            foreach (var item in this.connectedSensorsList)
             {
-                await movesense.DisconnectMdsAsync(item.Id);
+                if (item.Connected == true)
+                {
+                    await Plugin.Movesense.CrossMovesense.Current.DisconnectMdsAsync(item.Id);
+                    item.Connected = false;
+                }
             }
-
         }
 
     }

@@ -76,17 +76,16 @@ namespace sensorsgit
             return count;
         }
 
-        public async Task<bool> DisconnectAll()
+        public async void DisconnectAll()
         {
             foreach (var item in this.foundSensorsList)
             {
                 if (item.Connected == true)
                 {
-                    await movesense.DisconnectMdsAsync(item.Id);
+                    await Plugin.Movesense.CrossMovesense.Current.DisconnectMdsAsync(item.Id);
                     item.Connected = false;
                 }
             }
-            return true;
         }
     }
 }
