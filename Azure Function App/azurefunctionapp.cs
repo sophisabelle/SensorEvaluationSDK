@@ -106,8 +106,8 @@ public static async Task WriteFailedResponse(HttpResponseMessage response)
 public static async Task InvokeBatchExecutionService(string path)
 {
 
-    const string BaseUrl = "https://europewest.services.azureml.net/subscriptions/1543bcfb1cd84ec7929520bb03be04af/services/7a2b3bec258f4203a2c891cee83edb51/jobs";
-    const string apiKey = "GSOQaW0ecNuUBs2xSp15/E9w0+6JmCrorHBsNtJcktKPW2IKDpMjDTBD9lH6Zi+Asr6SFENfo5mGmZ13gB3CoQ=="; // Replace this with the API key for the web service
+    const string BaseUrl = BASEURL;
+    const string apiKey = APIDKEY;
 
     // set a time out for polling status
     const int TimeOutInMilliseconds = 120 * 4 * 1000; // Set a timeout of 2 minutes
